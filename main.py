@@ -19,16 +19,23 @@ class Bot(object):
 		self.auth = OAuth1(self.BOT_OPTIONS['CONSUMER_KEY'], self.BOT_OPTIONS['CONSUMER_SECRET'], self.BOT_OPTIONS['ACCESS_TOKEN'], 
 			self.BOT_OPTIONS['ACCESS_TOKEN_SECRET'])
 
-	def doit(self):
-		url = 'https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=mayankrajoria&count=5000'
+	def getFollowers(self, cursor = -1, count = 5000, name = "mayankrajoria"):
+		url = 'https://api.twitter.com/1.1/followers/ids.json?cursor='+str(cursor)+'&screen_name=mayankrajoria&count='+str(count)
+		print 'URL: '+url
 		res = requests.get(url, auth = self.auth)
 
 		parsed_json = json.loads(res.content)
 		print res.content
-		print parsed_json["errors"][0]["code"]
+		try:
+			print "Error Occurred: " + parsed_json["errors"]
+			print "With code: " + parsed_json["errors"][0]["code"]
+			return
+		except:
+			userids = parsed_json["ids"]
+			return userids
 
 aBot = Bot()
-aBot.doit()
+print aBot.getFollowers(-1, 5, "mayankrajoria")
 
 while(False):
 	url = 'https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=mayankrajoria&count=5000'
