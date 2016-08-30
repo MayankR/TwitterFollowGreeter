@@ -1,0 +1,8 @@
+#Data Files
+FOLLOWERS_FILE data/followers.txt
+
+#Credentials
+CONSUMER_KEY abcd
+CONSUMER_SECRET bcde
+ACCESS_TOKEN cdef
+ACCESS_TOKEN_SECRET defg
