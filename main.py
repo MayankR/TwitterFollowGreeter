@@ -25,7 +25,7 @@ class Bot(object):
 		res = requests.get(url, auth = self.auth)
 
 		parsed_json = json.loads(res.content)
-		print res.content
+		# print res.content
 		try:
 			print "Error Occurred: " + str(parsed_json["errors"])
 			print "With code: " + str(parsed_json["errors"][0]["code"])
@@ -41,7 +41,7 @@ class Bot(object):
 	def getNewFollowers(self):
 		old_followers = []
 		new_followers = []
-		followers = self.getFollowers(-1, 5, "mayankrajoria")
+		followers = self.getFollowers(-1, 5000, "mayankrajoria")
 		if len(followers) == 0:
 			print "No Followers"
 			return
@@ -61,6 +61,7 @@ class Bot(object):
 		print "New Followers:"
 		for follower in followers:
 			if not str(follower) in old_followers:
+				self.sendMessage(follower)
 				new_followers.append(follower)
 				followers_file.write(str(follower) + "\n")
 				print "   " + str(follower)
@@ -73,17 +74,4 @@ class Bot(object):
 
 
 aBot = Bot()
-# followers = aBot.getFollowers(-1, 5, "mayankrajoria")
-# aBot.sendMessage(367973324)
 aBot.getNewFollowers()
-
-while(False):
-	url = 'https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=mayankrajoria&count=5000'
-
-	res = requests.get(url, auth = auth)
-
-	parsed_json = json.loads(res.content)
-
-	print parsed_json
-
-	time.sleep(10)
