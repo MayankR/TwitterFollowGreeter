@@ -27,15 +27,48 @@ class Bot(object):
 		parsed_json = json.loads(res.content)
 		print res.content
 		try:
-			print "Error Occurred: " + parsed_json["errors"]
-			print "With code: " + parsed_json["errors"][0]["code"]
+			print "Error Occurred: " + str(parsed_json["errors"])
+			print "With code: " + str(parsed_json["errors"][0]["code"])
 			return
 		except:
-			userids = parsed_json["ids"]
+			userids = []
+			userids_json = parsed_json["ids"]
+			for userid in userids_json:
+				userids.append(userid)
 			return userids
 
+	#Writes unique values to specified file, each value in new line.
+	def getNewFollowers(self):
+		old_followers = []
+		new_followers = []
+		followers = self.getFollowers(-1, 5, "mayankrajoria")
+		if len(followers) == 0:
+			print "No Followers"
+			return
+
+		try:
+			followers_file = open(self.BOT_OPTIONS['FOLLOWERS_FILE'], 'a+')
+		except:
+			print "Error reading followers file.\n"
+
+		print "Old Followers:"
+		followers_file.seek(0, 0)
+		old_follower_lines = followers_file.readlines()
+		for old_follower in old_follower_lines:
+			print "   " + old_follower[:-1]
+			old_followers.append(old_follower[:-1])
+
+		print "New Followers:"
+		for follower in followers:
+			if not str(follower) in old_followers:
+				new_followers.append(follower)
+				followers_file.write(str(follower) + "\n")
+				print "   " + str(follower)
+
+
 aBot = Bot()
-print aBot.getFollowers(-1, 5, "mayankrajoria")
+# followers = aBot.getFollowers(-1, 5, "mayankrajoria")
+aBot.getNewFollowers()
 
 while(False):
 	url = 'https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=mayankrajoria&count=5000'
