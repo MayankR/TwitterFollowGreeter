@@ -65,9 +65,16 @@ class Bot(object):
 				followers_file.write(str(follower) + "\n")
 				print "   " + str(follower)
 
+	def sendMessage(self, userid):
+		url = 'https://api.twitter.com/1.1/direct_messages/new.json'
+		res = requests.post(url, data = {'text':'Hi, thanks for the follow!', 'user_id':userid}, auth = self.auth)
+		print res.content
+
+
 
 aBot = Bot()
 # followers = aBot.getFollowers(-1, 5, "mayankrajoria")
+# aBot.sendMessage(367973324)
 aBot.getNewFollowers()
 
 while(False):
